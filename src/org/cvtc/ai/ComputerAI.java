@@ -3,12 +3,6 @@
  */
 package org.cvtc.ai;
 
-import org.cvtc.ships.BattleShip;
-import org.cvtc.ships.CarrierShip;
-import org.cvtc.ships.DestroyerShip;
-import org.cvtc.ships.PBShip;
-import org.cvtc.ships.SubShip;
-
 /**
  * @author wlarrabee
  *
@@ -28,7 +22,7 @@ public class ComputerAI {
 		this.position_x = position_x;
 	}
 
-	public int getPostion_y() {
+	public int getPosition_y() {
 		return postion_y;
 	}
 
@@ -36,32 +30,22 @@ public class ComputerAI {
 		this.postion_y = postion_y;
 	}
 
-	public ComputerAI(String[][] shotsFiredGrid, CarrierShip carrierShip, BattleShip battleShip , SubShip subShip, DestroyerShip destroyerShip, PBShip pbShip){
+	public ComputerAI(String[][] shotsFiredGrid){
 		//This constructor needs a multidimensional array as an input along with the 5 ships 
-		
-		int carrierShipHitsLeft = carrierShip.getHitsLeft();
-		
-		int battleShipHitsLeft = battleShip.getHitsLeft();
-		
-		int subShipHitsLeft = subShip.getHitsLeft();
-		
-		int destroyerShipHitsLeft = destroyerShip.getHitsLeft();
-		
-		int PBShipHitsLeft = pbShip.getHitsLeft();
 		
 		//x,y variables for inside the function
 		int x = 0;
 		
 		int y = 0;
 		
-		String[][] potentialShipsLargerThan3 = new String[10][];
+		int[][] potentialShipsLargerThan3 = new int[shotsFiredGrid.length][shotsFiredGrid[0].length];
 
 		//create a temporary multidimensional array to store potential location of a ship
 		for(int row=0;row<shotsFiredGrid.length -1;row++){
 			
-			for(int col=0;col<10;col++){	
+			for(int col=0;col<shotsFiredGrid[0].length -1;col++){	
 				
-				potentialShipsLargerThan3[row][col] = "0";
+				potentialShipsLargerThan3[row][col] = 0;
 				
 			}
 			
@@ -73,210 +57,117 @@ public class ComputerAI {
 		//that direction.
 		
 		
-		for(int row=0;row<shotsFiredGrid.length -1;row++){
+		for(int row=0;row<shotsFiredGrid.length;row++){
 			
 			for(int col=0;col<shotsFiredGrid[0].length;col++){	
 				
 				if(shotsFiredGrid[row][col] == "" || shotsFiredGrid[row][col] == "S"){
 					
-					if(row<shotsFiredGrid.length-1){
+					if(row < shotsFiredGrid.length-1){
 						
 						if(shotsFiredGrid[row+1][col] == "" || shotsFiredGrid[row+1][col] == "S"){
-							
 							if(row<shotsFiredGrid.length-2){
 								
 								if(shotsFiredGrid[row+2][col] == "" || shotsFiredGrid[row+2][col] == "S"){
 									
-										potentialShipsLargerThan3[row][col] += 2;
+									if(row<shotsFiredGrid.length-3){
 										
-										potentialShipsLargerThan3[row+1][col] += 1;
+										if(shotsFiredGrid[row+3][col] == "" || shotsFiredGrid[row+3][col] == "S"){
+											
+											if(row<shotsFiredGrid.length-4){
+												
+												if(shotsFiredGrid[row+4][col] == "" || shotsFiredGrid[row+4][col] == "S"){
+													
+													potentialShipsLargerThan3[row][col] += 5;
 										
+													potentialShipsLargerThan3[row+1][col] += 4;
+											
+													potentialShipsLargerThan3[row+2][col] += 3;
+											
+													potentialShipsLargerThan3[row+3][col] += 2;
+											
+													potentialShipsLargerThan3[row+4][col] += 1;
+											
+												}else{
+													
+													potentialShipsLargerThan3[row][col] += 4;
+										
+													potentialShipsLargerThan3[row+1][col] += 3;
+											
+													potentialShipsLargerThan3[row+2][col] += 2;
+											
+													potentialShipsLargerThan3[row+3][col] += 1;
+													
+												}
+											}else{
+												
+												potentialShipsLargerThan3[row][col] += 4;
+										
+												potentialShipsLargerThan3[row+1][col] += 3;
+											
+												potentialShipsLargerThan3[row+2][col] += 2;
+											
+												potentialShipsLargerThan3[row+3][col] += 1;
+												
+											}
+										}else{
+											
+											potentialShipsLargerThan3[row][col] += 3;
+										
+											potentialShipsLargerThan3[row+1][col] += 2;
+											
+											potentialShipsLargerThan3[row+2][col] += 1;
+											
+										}
+									}else{
+										
+										potentialShipsLargerThan3[row][col] += 1;
+										
+										potentialShipsLargerThan3[row+1][col] += 2;
+										
+									}
+										
+								}else{
+								
+									potentialShipsLargerThan3[row][col] += 1;
+								
 								}
 								
 							}else{
 								
-								potentialShipsLargerThan3[row][col] += 1;
+									potentialShipsLargerThan3[row][col] += 1;
 								
 							}
+						}else if(shotsFiredGrid[row+1][col] == "H"){
 							
-						}else if(shotsFiredGrid[row+1][col] == "1"){
-							
-							if(carrierShipHitsLeft !=0){
-								
-								if(row<shotsFiredGrid.length-2){
+							if(row<shotsFiredGrid.length-2){
 									
-									if(shotsFiredGrid[row+2][col] == "1"){
+								if(shotsFiredGrid[row+2][col] == "H"){
 										
-										potentialShipsLargerThan3[row][col] = Integer.toString(Integer.parseInt(potentialShipsLargerThan3[row][col]) + 1000);
+									potentialShipsLargerThan3[row][col] += 1000;
 										
-									}else{
-										
-										potentialShipsLargerThan3[row][col] = Integer.toString(Integer.parseInt(potentialShipsLargerThan3[row][col]) + 500);
-										
-									}
-									
-								}else if(row>1){
-									
-									if(shotsFiredGrid[row-1][col] == "1"){
-										
-										potentialShipsLargerThan3[row][col] = Integer.toString(Integer.parseInt(potentialShipsLargerThan3[row][col]) + 1000);
-										
-									}else{
-										
-										potentialShipsLargerThan3[row][col] = Integer.toString(Integer.parseInt(potentialShipsLargerThan3[row][col]) + 500);
-										
-									}
-									
 								}else{
-									
-									potentialShipsLargerThan3[row][col] = Integer.toString(Integer.parseInt(potentialShipsLargerThan3[row][col]) + 500);
-									
+										
+									potentialShipsLargerThan3[row][col] += 500;
+										
 								}
-								
-							}
-							
-						}else if(shotsFiredGrid[row+1][col] == "2"){
-							
-							if(battleShipHitsLeft !=0){
-								
-								if(row<shotsFiredGrid.length-2){
 									
-									if(shotsFiredGrid[row+2][col] == "2"){
-										
-										potentialShipsLargerThan3[row][col] = Integer.toString(Integer.parseInt(potentialShipsLargerThan3[row][col]) + 1000);
-										
-									}else{
-										
-										potentialShipsLargerThan3[row][col] = Integer.toString(Integer.parseInt(potentialShipsLargerThan3[row][col]) + 500);
-										
-									}
+							}else if(row>1){
 									
-								}else if(row>1){
-									
-									if(shotsFiredGrid[row-1][col] == "2"){
+								if(shotsFiredGrid[row-1][col] == "H"){
 										
-										potentialShipsLargerThan3[row][col] = Integer.toString(Integer.parseInt(potentialShipsLargerThan3[row][col]) + 1000);
+									potentialShipsLargerThan3[row][col] += 1000;
 										
-									}else{
-										
-										potentialShipsLargerThan3[row][col] = Integer.toString(Integer.parseInt(potentialShipsLargerThan3[row][col]) + 500);
-										
-									}
-									
 								}else{
-									
-									potentialShipsLargerThan3[row][col] = Integer.toString(Integer.parseInt(potentialShipsLargerThan3[row][col]) + 500);
-									
+										
+									potentialShipsLargerThan3[row][col] += 500;
+										
 								}
-								
-							}	
-							
-						}else if(shotsFiredGrid[row+1][col] == "3"){
-							
-							if(destroyerShipHitsLeft !=0){
-								
-								if(row<shotsFiredGrid.length-2){
 									
-									if(shotsFiredGrid[row+2][col] == "3"){
-										
-										potentialShipsLargerThan3[row][col] = Integer.toString(Integer.parseInt(potentialShipsLargerThan3[row][col]) + 1000);
-										
-									}else{
-										
-										potentialShipsLargerThan3[row][col] = Integer.toString(Integer.parseInt(potentialShipsLargerThan3[row][col]) + 500);
-										
-									}
+							}else{
 									
-								}else if(row>1){
+								potentialShipsLargerThan3[row][col] += 500;
 									
-									if(shotsFiredGrid[row-1][col] == "3"){
-										
-										potentialShipsLargerThan3[row][col] = Integer.toString(Integer.parseInt(potentialShipsLargerThan3[row][col]) + 1000);
-										
-									}else{
-										
-										potentialShipsLargerThan3[row][col] = Integer.toString(Integer.parseInt(potentialShipsLargerThan3[row][col]) + 500);
-										
-									}
-									
-								}else{
-									
-									potentialShipsLargerThan3[row][col] = Integer.toString(Integer.parseInt(potentialShipsLargerThan3[row][col]) + 500);
-									
-								}
-								
-							}	
-							
-						}else if(shotsFiredGrid[row+1][col] == "4"){
-							
-							if(subShipHitsLeft !=0){
-								
-								if(row<shotsFiredGrid.length-2){
-									
-									if(shotsFiredGrid[row+2][col] == "4"){
-										
-										potentialShipsLargerThan3[row][col] = Integer.toString(Integer.parseInt(potentialShipsLargerThan3[row][col]) + 1000);
-										
-									}else{
-										
-										potentialShipsLargerThan3[row][col] = Integer.toString(Integer.parseInt(potentialShipsLargerThan3[row][col]) + 500);
-										
-									}
-									
-								}else if(row>1){
-									
-									if(shotsFiredGrid[row-1][col] == "4"){
-										
-										potentialShipsLargerThan3[row][col] = Integer.toString(Integer.parseInt(potentialShipsLargerThan3[row][col]) + 1000);
-										
-									}else{
-										
-										potentialShipsLargerThan3[row][col] = Integer.toString(Integer.parseInt(potentialShipsLargerThan3[row][col]) + 500);
-										
-									}
-									
-								}else{
-									
-									potentialShipsLargerThan3[row][col] = Integer.toString(Integer.parseInt(potentialShipsLargerThan3[row][col]) + 500);
-									
-								}
-								
-							}
-							
-						}else if(shotsFiredGrid[row+1][col] == "5"){
-							
-							if(PBShipHitsLeft !=0){
-								
-								if(row<shotsFiredGrid.length-2){
-									
-									if(shotsFiredGrid[row+2][col] == "5"){
-										
-										potentialShipsLargerThan3[row][col] = Integer.toString(Integer.parseInt(potentialShipsLargerThan3[row][col]) + 1000);
-										
-									}else{
-										
-										potentialShipsLargerThan3[row][col] = Integer.toString(Integer.parseInt(potentialShipsLargerThan3[row][col]) + 500);
-										
-									}
-									
-								}else if(row>1){
-									
-									if(shotsFiredGrid[row-1][col] == "5"){
-										
-										potentialShipsLargerThan3[row][col] = Integer.toString(Integer.parseInt(potentialShipsLargerThan3[row][col]) + 1000);
-										
-									}else{
-										
-										potentialShipsLargerThan3[row][col] = Integer.toString(Integer.parseInt(potentialShipsLargerThan3[row][col]) + 500);
-										
-									}
-									
-								}else{
-									
-									potentialShipsLargerThan3[row][col] = Integer.toString(Integer.parseInt(potentialShipsLargerThan3[row][col]) + 500);
-									
-								}
-								
 							}
 							
 						}
@@ -284,204 +175,111 @@ public class ComputerAI {
 					}
 					
 					if(row>0){
-						
 						if(shotsFiredGrid[row-1][col] == "" || shotsFiredGrid[row-1][col] == "S"){
 							
 							if(row>1){
 								
 								if(shotsFiredGrid[row-2][col] == "" || shotsFiredGrid[row-2][col] == "S"){
 									
-										potentialShipsLargerThan3[row][col] += 2;
+									if(row>2){
 										
-										potentialShipsLargerThan3[row-1][col] += 1;
+										if(shotsFiredGrid[row-3][col] == "" || shotsFiredGrid[row-3][col] == "S"){
+											
+											if(row>3){
+												
+												if(shotsFiredGrid[row-4][col] == "" || shotsFiredGrid[row-4][col] == "S"){
+													
+													potentialShipsLargerThan3[row][col] += 5;
 										
+													potentialShipsLargerThan3[row-1][col] += 4;
+											
+													potentialShipsLargerThan3[row-2][col] += 3;
+											
+													potentialShipsLargerThan3[row-3][col] += 2;
+											
+													potentialShipsLargerThan3[row-4][col] += 1;
+											
+												}else{
+													
+													potentialShipsLargerThan3[row][col] += 4;
+										
+													potentialShipsLargerThan3[row-1][col] += 3;
+											
+													potentialShipsLargerThan3[row-2][col] += 2;
+											
+													potentialShipsLargerThan3[row-3][col] += 1;
+													
+												}
+											}else{
+												
+												potentialShipsLargerThan3[row][col] += 4;
+										
+												potentialShipsLargerThan3[row-1][col] += 3;
+											
+												potentialShipsLargerThan3[row-2][col] += 2;
+											
+												potentialShipsLargerThan3[row-3][col] += 1;
+												
+											}
+										}else{
+											
+											potentialShipsLargerThan3[row][col] += 3;
+										
+											potentialShipsLargerThan3[row-1][col] += 2;
+											
+											potentialShipsLargerThan3[row-2][col] += 1;
+											
+										}
+									}else{
+										
+										potentialShipsLargerThan3[row][col] += 1;
+										
+										potentialShipsLargerThan3[row-1][col] += 2;
+										
+									}
+										
+								}else{
+								
+									potentialShipsLargerThan3[row][col] += 1;
+								
 								}
 								
 							}else{
 								
-								potentialShipsLargerThan3[row][col] += 1;
+									potentialShipsLargerThan3[row][col] += 1;
 								
 							}
+						
+						}else if(shotsFiredGrid[row-1][col] == "H"){
 							
-						}else if(shotsFiredGrid[row-1][col] == "1"){
-							
-							if(carrierShipHitsLeft !=0){
-								
-								if(row>1){
+							if(row>1){
 									
-									if(shotsFiredGrid[row-2][col] == "1"){
+								if(shotsFiredGrid[row-2][col] == "H"){
 										
-										potentialShipsLargerThan3[row][col] = Integer.toString(Integer.parseInt(potentialShipsLargerThan3[row][col]) + 1000);
+									potentialShipsLargerThan3[row][col] += 1000;
 										
-									}else{
-										
-										potentialShipsLargerThan3[row][col] = Integer.toString(Integer.parseInt(potentialShipsLargerThan3[row][col]) + 500);
-										
-									}
-									
-								}else if(row<shotsFiredGrid.length-1){
-									
-									if(shotsFiredGrid[row+1][col] == "1"){
-										
-										potentialShipsLargerThan3[row][col] = Integer.toString(Integer.parseInt(potentialShipsLargerThan3[row][col]) + 1000);
-										
-									}else{
-										
-										potentialShipsLargerThan3[row][col] = Integer.toString(Integer.parseInt(potentialShipsLargerThan3[row][col]) + 500);
-										
-									}
-									
 								}else{
-									
-									potentialShipsLargerThan3[row][col] = Integer.toString(Integer.parseInt(potentialShipsLargerThan3[row][col]) + 500);
-									
+										
+									potentialShipsLargerThan3[row][col] += 500;
+										
 								}
-								
-							}
-							
-						}else if(shotsFiredGrid[row-1][col] == "2"){
-							
-							if(battleShipHitsLeft !=0){
-								
-								if(row>1){
 									
-									if(shotsFiredGrid[row-2][col] == "2"){
-										
-										potentialShipsLargerThan3[row][col] = Integer.toString(Integer.parseInt(potentialShipsLargerThan3[row][col]) + 1000);
-										
-									}else{
-										
-										potentialShipsLargerThan3[row][col] = Integer.toString(Integer.parseInt(potentialShipsLargerThan3[row][col]) + 500);
-										
-									}
+							}else if(row<shotsFiredGrid.length+1){
 									
-
-								}else if(row<shotsFiredGrid.length-1){
-									
-									if(shotsFiredGrid[row+1][col] == "2"){
+								if(shotsFiredGrid[row+1][col] == "H"){
 										
-										potentialShipsLargerThan3[row][col] = Integer.toString(Integer.parseInt(potentialShipsLargerThan3[row][col]) + 1000);
+									potentialShipsLargerThan3[row][col] += 1000;
 										
-									}else{
-										
-										potentialShipsLargerThan3[row][col] = Integer.toString(Integer.parseInt(potentialShipsLargerThan3[row][col]) + 500);
-										
-									}
-									
 								}else{
-									
-									potentialShipsLargerThan3[row][col] = Integer.toString(Integer.parseInt(potentialShipsLargerThan3[row][col]) + 500);
-									
+										
+									potentialShipsLargerThan3[row][col] += 500;
+										
 								}
-								
-							}
-							
-						}else if(shotsFiredGrid[row-1][col] == "3"){
-							
-							if(destroyerShipHitsLeft !=0){
-								
-								if(row>1){
 									
-									if(shotsFiredGrid[row-2][col] == "3"){
-										
-										potentialShipsLargerThan3[row][col] = Integer.toString(Integer.parseInt(potentialShipsLargerThan3[row][col]) + 1000);
-										
-									}else{
-										
-										potentialShipsLargerThan3[row][col] = Integer.toString(Integer.parseInt(potentialShipsLargerThan3[row][col]) + 500);
-										
-									}
+							}else{
 									
-								}else if(row<shotsFiredGrid.length-1){
+								potentialShipsLargerThan3[row][col] += 500;
 									
-									if(shotsFiredGrid[row+1][col] == "3"){
-										
-										potentialShipsLargerThan3[row][col] = Integer.toString(Integer.parseInt(potentialShipsLargerThan3[row][col]) + 1000);
-										
-									}else{
-										
-										potentialShipsLargerThan3[row][col] = Integer.toString(Integer.parseInt(potentialShipsLargerThan3[row][col]) + 500);
-										
-									}
-									
-								}else{
-									
-									potentialShipsLargerThan3[row][col] = Integer.toString(Integer.parseInt(potentialShipsLargerThan3[row][col]) + 500);
-									
-								}
-								
-							}
-							
-						}else if(shotsFiredGrid[row-1][col] == "4"){
-							
-							if(subShipHitsLeft !=0){
-								
-								if(row>1){
-									
-									if(shotsFiredGrid[row-2][col] == "4"){
-										
-										potentialShipsLargerThan3[row][col] = Integer.toString(Integer.parseInt(potentialShipsLargerThan3[row][col]) + 1000);
-										
-									}else{
-										
-										potentialShipsLargerThan3[row][col] = Integer.toString(Integer.parseInt(potentialShipsLargerThan3[row][col]) + 500);
-										
-									}
-									
-								}else if(row<shotsFiredGrid.length-1){
-									
-									if(shotsFiredGrid[row+1][col] == "4"){
-										
-										potentialShipsLargerThan3[row][col] = Integer.toString(Integer.parseInt(potentialShipsLargerThan3[row][col]) + 1000);
-										
-									}else{
-										
-										potentialShipsLargerThan3[row][col] = Integer.toString(Integer.parseInt(potentialShipsLargerThan3[row][col]) + 500);
-										
-									}
-									
-								}else{
-									
-									potentialShipsLargerThan3[row][col] = Integer.toString(Integer.parseInt(potentialShipsLargerThan3[row][col]) + 500);
-									
-								}
-								
-							}
-							
-						}else if(shotsFiredGrid[row-1][col] == "5"){
-							
-							if(PBShipHitsLeft !=0){
-								
-								if(row>1){
-									
-									if(shotsFiredGrid[row-2][col] == "5"){
-										
-										potentialShipsLargerThan3[row][col] = Integer.toString(Integer.parseInt(potentialShipsLargerThan3[row][col]) + 1000);
-										
-									}else{
-										
-										potentialShipsLargerThan3[row][col] = Integer.toString(Integer.parseInt(potentialShipsLargerThan3[row][col]) + 500);
-										
-									}
-									
-								}else if(row<shotsFiredGrid.length-1){
-									
-									if(shotsFiredGrid[row+1][col] == "5"){
-										
-										potentialShipsLargerThan3[row][col] = Integer.toString(Integer.parseInt(potentialShipsLargerThan3[row][col]) + 1000);
-										
-									}else{
-										
-										potentialShipsLargerThan3[row][col] = Integer.toString(Integer.parseInt(potentialShipsLargerThan3[row][col]) + 500);
-										
-									}
-									
-								}else{
-									
-									potentialShipsLargerThan3[row][col] = Integer.toString(Integer.parseInt(potentialShipsLargerThan3[row][col]) + 500);
-									
-								}
-								
 							}
 							
 						}
@@ -489,408 +287,226 @@ public class ComputerAI {
 					}
 					
 					if(col>0){
-						
 						if(shotsFiredGrid[row][col-1] == "" || shotsFiredGrid[row][col-1] == "S"){
 							
 							if(col>1){
 								
 								if(shotsFiredGrid[row][col-2] == "" || shotsFiredGrid[row][col-2] == "S"){
 									
-										potentialShipsLargerThan3[row][col] += 2;
+									if(col>2){
 										
-										potentialShipsLargerThan3[row][col-1] += 1;
+										if(shotsFiredGrid[row][col-3] == "" || shotsFiredGrid[row][col-3] == "S"){
+											
+											if(col>3){
+												
+												if(shotsFiredGrid[row][col-4] == "" || shotsFiredGrid[row][col-4] == "S"){
+													
+													potentialShipsLargerThan3[row][col] += 5;
 										
+													potentialShipsLargerThan3[row][col-1] += 4;
+											
+													potentialShipsLargerThan3[row][col-2] += 3;
+											
+													potentialShipsLargerThan3[row][col-3] += 2;
+											
+													potentialShipsLargerThan3[row][col-4] += 1;
+											
+												}else{
+													
+													potentialShipsLargerThan3[row][col] += 4;
+										
+													potentialShipsLargerThan3[row][col-1] += 3;
+											
+													potentialShipsLargerThan3[row][col-2] += 2;
+											
+													potentialShipsLargerThan3[row][col-3] += 1;
+													
+												}
+											}else{
+												
+												potentialShipsLargerThan3[row][col] += 4;
+										
+												potentialShipsLargerThan3[row][col-1] += 3;
+											
+												potentialShipsLargerThan3[row][col-2] += 2;
+											
+												potentialShipsLargerThan3[row][col-3] += 1;
+												
+											}
+										}else{
+											
+											potentialShipsLargerThan3[row][col] += 3;
+										
+											potentialShipsLargerThan3[row][col-1] += 2;
+											
+											potentialShipsLargerThan3[row][col -2] += 1;
+											
+										}
+									}else{
+										
+										potentialShipsLargerThan3[row][col] += 1;
+										
+										potentialShipsLargerThan3[row][col-1] += 2;
+										
+									}
+										
+								}else{
+								
+									potentialShipsLargerThan3[row][col] += 1;
+								
 								}
 								
 							}else{
 								
-								potentialShipsLargerThan3[row][col] += 1;
+									potentialShipsLargerThan3[row][col] += 1;
 								
 							}
 							
-						}else if(shotsFiredGrid[row][col-1] == "1"){
+						}else if(shotsFiredGrid[row][col-1] == "H"){
 							
-							if(carrierShipHitsLeft !=0){
-								
-								if(col>1){
+							if(col>1){
 									
-									if(shotsFiredGrid[row][col-2] == "1"){
+								if(shotsFiredGrid[row][col-2] == "H"){
 										
-										potentialShipsLargerThan3[row][col] = Integer.toString(Integer.parseInt(potentialShipsLargerThan3[row][col]) + 1000);
+									potentialShipsLargerThan3[row][col] += 1000;
 										
-									}else{
-										
-										potentialShipsLargerThan3[row][col] = Integer.toString(Integer.parseInt(potentialShipsLargerThan3[row][col]) + 500);
-										
-									}
-									
-								}else if(row<shotsFiredGrid[0].length-1){
-									
-									if(shotsFiredGrid[row][col+1] == "1"){
-										
-										potentialShipsLargerThan3[row][col] = Integer.toString(Integer.parseInt(potentialShipsLargerThan3[row][col]) + 1000);
-										
-									}else{
-										
-										potentialShipsLargerThan3[row][col] = Integer.toString(Integer.parseInt(potentialShipsLargerThan3[row][col]) + 500);
-										
-									}
-									
 								}else{
-									
-									potentialShipsLargerThan3[row][col] = Integer.toString(Integer.parseInt(potentialShipsLargerThan3[row][col]) + 500);
-									
+										
+									potentialShipsLargerThan3[row][col] += 500;
+										
 								}
-								
-							}
-							
-						}else if(shotsFiredGrid[row][col-1] == "2"){
-							
-							if(battleShipHitsLeft !=0){
-								
-								if(col>1){
 									
-									if(shotsFiredGrid[row][col-2] == "2"){
-										
-										potentialShipsLargerThan3[row][col] = Integer.toString(Integer.parseInt(potentialShipsLargerThan3[row][col]) + 1000);
-										
-									}else{
-										
-										potentialShipsLargerThan3[row][col] = Integer.toString(Integer.parseInt(potentialShipsLargerThan3[row][col]) + 500);
-										
-									}
+							}else if(col<shotsFiredGrid[0].length-1){
 									
-								}else if(row<shotsFiredGrid[0].length-1){
-									
-									if(shotsFiredGrid[row][col+1] == "2"){
+								if(shotsFiredGrid[row][col+1] == "H"){
 										
-										potentialShipsLargerThan3[row][col] = Integer.toString(Integer.parseInt(potentialShipsLargerThan3[row][col]) + 1000);
+									potentialShipsLargerThan3[row][col] += 1000;
 										
-									}else{
-										
-										potentialShipsLargerThan3[row][col] = Integer.toString(Integer.parseInt(potentialShipsLargerThan3[row][col]) + 500);
-										
-									}
-									
 								}else{
-									
-									potentialShipsLargerThan3[row][col] = Integer.toString(Integer.parseInt(potentialShipsLargerThan3[row][col]) + 500);
-									
+										
+									potentialShipsLargerThan3[row][col] += 500;
+										
 								}
-								
-							}
-							
-						}else if(shotsFiredGrid[row][col-1] == "3"){
-							
-							if(destroyerShipHitsLeft !=0){
-								
-								if(col>1){
 									
-									if(shotsFiredGrid[row][col-2] == "3"){
-										
-										potentialShipsLargerThan3[row][col] = Integer.toString(Integer.parseInt(potentialShipsLargerThan3[row][col]) + 1000);
-										
-									}else{
-										
-										potentialShipsLargerThan3[row][col] = Integer.toString(Integer.parseInt(potentialShipsLargerThan3[row][col]) + 500);
-										
-									}
+							}else{
 									
-								}else if(row<shotsFiredGrid[0].length-1){
+								potentialShipsLargerThan3[row][col] += 500;
 									
-									if(shotsFiredGrid[row][col+1] == "3"){
-										
-										potentialShipsLargerThan3[row][col] = Integer.toString(Integer.parseInt(potentialShipsLargerThan3[row][col]) + 1000);
-										
-									}else{
-										
-										potentialShipsLargerThan3[row][col] = Integer.toString(Integer.parseInt(potentialShipsLargerThan3[row][col]) + 500);
-										
-									}
-									
-								}else{
-									
-									potentialShipsLargerThan3[row][col] = Integer.toString(Integer.parseInt(potentialShipsLargerThan3[row][col]) + 500);
-									
-								}
-								
-							}
-							
-						}else if(shotsFiredGrid[row][col-1] == "4"){
-							
-							if(subShipHitsLeft !=0){
-								
-								if(col>1){
-									
-									if(shotsFiredGrid[row][col-2] == "4"){
-										
-										potentialShipsLargerThan3[row][col] = Integer.toString(Integer.parseInt(potentialShipsLargerThan3[row][col]) + 1000);
-										
-									}else{
-										
-										potentialShipsLargerThan3[row][col] = Integer.toString(Integer.parseInt(potentialShipsLargerThan3[row][col]) + 500);
-										
-									}
-									
-								}else if(row<shotsFiredGrid[0].length-1){
-									
-									if(shotsFiredGrid[row][col+1] == "4"){
-										
-										potentialShipsLargerThan3[row][col] = Integer.toString(Integer.parseInt(potentialShipsLargerThan3[row][col]) + 1000);
-										
-									}else{
-										
-										potentialShipsLargerThan3[row][col] = Integer.toString(Integer.parseInt(potentialShipsLargerThan3[row][col]) + 500);
-										
-									}
-									
-								}else{
-									
-									potentialShipsLargerThan3[row][col] = Integer.toString(Integer.parseInt(potentialShipsLargerThan3[row][col]) + 500);
-									
-								}
-								
-							}
-							
-						}else if(shotsFiredGrid[row][col-1] == "5"){
-							
-							if(PBShipHitsLeft !=0){
-								
-								if(col>1){
-									
-									if(shotsFiredGrid[row][col-2] == "5"){
-										
-										potentialShipsLargerThan3[row][col] = Integer.toString(Integer.parseInt(potentialShipsLargerThan3[row][col]) + 1000);
-										
-									}else{
-										
-										potentialShipsLargerThan3[row][col] = Integer.toString(Integer.parseInt(potentialShipsLargerThan3[row][col]) + 500);
-										
-									}
-									
-								}else if(row<shotsFiredGrid[0].length-1){
-									
-									if(shotsFiredGrid[row][col+1] == "5"){
-										
-										potentialShipsLargerThan3[row][col] = Integer.toString(Integer.parseInt(potentialShipsLargerThan3[row][col]) + 1000);
-										
-									}else{
-										
-										potentialShipsLargerThan3[row][col] = Integer.toString(Integer.parseInt(potentialShipsLargerThan3[row][col]) + 500);
-										
-									}
-									
-								}else{
-									
-									potentialShipsLargerThan3[row][col] = Integer.toString(Integer.parseInt(potentialShipsLargerThan3[row][col]) + 500);
-									
-								}
-								
 							}
 							
 						}
 						
 					}
 					
-					if(row<shotsFiredGrid[0].length-1){
+					if(col<shotsFiredGrid[0].length-1){
 						
 						if(shotsFiredGrid[row][col+1] == "" || shotsFiredGrid[row][col+1] == "S"){
 							
-							if(row<shotsFiredGrid[0].length-2){
+							if(col<shotsFiredGrid.length-2){
 								
 								if(shotsFiredGrid[row][col+2] == "" || shotsFiredGrid[row][col+2] == "S"){
 									
-										potentialShipsLargerThan3[row][col] += 2;
+									if(col<shotsFiredGrid.length-3){
 										
-										potentialShipsLargerThan3[row][col+1] += 1;
+										if(shotsFiredGrid[row][col+3] == "" || shotsFiredGrid[row][col+3] == "S"){
+											
+											if(col<shotsFiredGrid.length-4){
+												
+												if(shotsFiredGrid[row][col+4] == "" || shotsFiredGrid[row][col+4] == "S"){
+													
+													potentialShipsLargerThan3[row][col] += 5;
 										
+													potentialShipsLargerThan3[row][col+1] += 4;
+											
+													potentialShipsLargerThan3[row][col+2] += 3;
+											
+													potentialShipsLargerThan3[row][col+3] += 2;
+											
+													potentialShipsLargerThan3[row][col+4] += 1;
+											
+												}else{
+													
+													potentialShipsLargerThan3[row][col] += 4;
+										
+													potentialShipsLargerThan3[row][col+1] += 3;
+											
+													potentialShipsLargerThan3[row][col+2] += 2;
+											
+													potentialShipsLargerThan3[row][col+3] += 1;
+													
+												}
+											}else{
+												
+												potentialShipsLargerThan3[row][col] += 4;
+										
+												potentialShipsLargerThan3[row][col+1] += 3;
+											
+												potentialShipsLargerThan3[row][col+2] += 2;
+											
+												potentialShipsLargerThan3[row][col+3] += 1;
+												
+											}
+										}else{
+											
+											potentialShipsLargerThan3[row][col] += 3;
+										
+											potentialShipsLargerThan3[row][col+1] += 2;
+											
+											potentialShipsLargerThan3[row][col+2] += 1;
+											
+										}
+									}else{
+										
+										potentialShipsLargerThan3[row][col] += 1;
+										
+										potentialShipsLargerThan3[row][col+1] += 2;
+										
+									}
+										
+								}else{
+								
+									potentialShipsLargerThan3[row][col] += 1;
+								
 								}
 								
 							}else{
 								
-								potentialShipsLargerThan3[row][col] += 1;
+									potentialShipsLargerThan3[row][col] += 1;
 								
 							}
 							
-						}else if(shotsFiredGrid[row][col+1] == "1"){
+						}else if(shotsFiredGrid[row][col+1] == "H"){
 							
-							if(carrierShipHitsLeft !=0){
-								
-								if(row<shotsFiredGrid[0].length-2){
+							if(col<shotsFiredGrid[0].length-2){
 									
-									if(shotsFiredGrid[row][col+2] == "1"){
+								if(shotsFiredGrid[row][col+2] == "H"){
 										
-										potentialShipsLargerThan3[row][col] = Integer.toString(Integer.parseInt(potentialShipsLargerThan3[row][col]) + 1000);
+									potentialShipsLargerThan3[row][col] += 1000;
 										
-									}else{
-										
-										potentialShipsLargerThan3[row][col] = Integer.toString(Integer.parseInt(potentialShipsLargerThan3[row][col]) + 500);
-										
-									}
-									
-								}else if(col>1){
-									
-									if(shotsFiredGrid[row][col-1] == "1"){
-										
-										potentialShipsLargerThan3[row][col] = Integer.toString(Integer.parseInt(potentialShipsLargerThan3[row][col]) + 1000);
-										
-									}else{
-										
-										potentialShipsLargerThan3[row][col] = Integer.toString(Integer.parseInt(potentialShipsLargerThan3[row][col]) + 500);
-										
-									}
-									
 								}else{
-									
-									potentialShipsLargerThan3[row][col] = Integer.toString(Integer.parseInt(potentialShipsLargerThan3[row][col]) + 500);
-									
+										
+									potentialShipsLargerThan3[row][col] += 500;
+										
 								}
-								
+									
+							}else if(col>1){
+									
+								if(shotsFiredGrid[row][col-1] == "H"){
+										
+									potentialShipsLargerThan3[row][col] += 1000;
+										
+								}else{
+										
+									potentialShipsLargerThan3[row][col] += 500;
+										
+								}
+									
+							}else{
+									
+								potentialShipsLargerThan3[row][col] += 500;
+									
 							}
-							
-						}else if(shotsFiredGrid[row][col+1] == "2"){
-							
-							if(battleShipHitsLeft !=0){
 								
-								if(row<shotsFiredGrid[0].length-2){
-									
-									if(shotsFiredGrid[row][col+2] == "2"){
-										
-										potentialShipsLargerThan3[row][col] = Integer.toString(Integer.parseInt(potentialShipsLargerThan3[row][col]) + 1000);
-										
-									}else{
-										
-										potentialShipsLargerThan3[row][col] = Integer.toString(Integer.parseInt(potentialShipsLargerThan3[row][col]) + 500);
-										
-									}
-									
-								}else if(col>1){
-									
-									if(shotsFiredGrid[row][col-1] == "2"){
-										
-										potentialShipsLargerThan3[row][col] = Integer.toString(Integer.parseInt(potentialShipsLargerThan3[row][col]) + 1000);
-										
-									}else{
-										
-										potentialShipsLargerThan3[row][col] = Integer.toString(Integer.parseInt(potentialShipsLargerThan3[row][col]) + 500);
-										
-									}
-									
-								}else{
-									
-									potentialShipsLargerThan3[row][col] = Integer.toString(Integer.parseInt(potentialShipsLargerThan3[row][col]) + 500);
-									
-								}
-								
-							}	
-							
-						}else if(shotsFiredGrid[row][col+1] == "3"){
-							
-							if(destroyerShipHitsLeft !=0){
-								
-								if(row<shotsFiredGrid[0].length-2){
-									
-									if(shotsFiredGrid[row][col+2] == "3"){
-										
-										potentialShipsLargerThan3[row][col] = Integer.toString(Integer.parseInt(potentialShipsLargerThan3[row][col]) + 1000);
-										
-									}else{
-										
-										potentialShipsLargerThan3[row][col] = Integer.toString(Integer.parseInt(potentialShipsLargerThan3[row][col]) + 500);
-										
-									}
-									
-								}else if(col>1){
-									
-									if(shotsFiredGrid[row][col-1] == "3"){
-										
-										potentialShipsLargerThan3[row][col] = Integer.toString(Integer.parseInt(potentialShipsLargerThan3[row][col]) + 1000);
-										
-									}else{
-										
-										potentialShipsLargerThan3[row][col] = Integer.toString(Integer.parseInt(potentialShipsLargerThan3[row][col]) + 500);
-										
-									}
-									
-								}else{
-									
-									potentialShipsLargerThan3[row][col] = Integer.toString(Integer.parseInt(potentialShipsLargerThan3[row][col]) + 500);
-									
-								}
-								
-							}
-							
-						}else if(shotsFiredGrid[row][col+1] == "4"){
-							
-							if(subShipHitsLeft !=0){
-								
-								if(row<shotsFiredGrid[0].length-2){
-									
-									if(shotsFiredGrid[row][col+2] == "4"){
-										
-										potentialShipsLargerThan3[row][col] = Integer.toString(Integer.parseInt(potentialShipsLargerThan3[row][col]) + 1000);
-										
-									}else{
-										
-										potentialShipsLargerThan3[row][col] = Integer.toString(Integer.parseInt(potentialShipsLargerThan3[row][col]) + 500);
-										
-									}
-									
-								}else if(col>1){
-									
-									if(shotsFiredGrid[row][col-1] == "4"){
-										
-										potentialShipsLargerThan3[row][col] = Integer.toString(Integer.parseInt(potentialShipsLargerThan3[row][col]) + 1000);
-										
-									}else{
-										
-										potentialShipsLargerThan3[row][col] = Integer.toString(Integer.parseInt(potentialShipsLargerThan3[row][col]) + 500);
-										
-									}
-									
-								}else{
-									
-									potentialShipsLargerThan3[row][col] = Integer.toString(Integer.parseInt(potentialShipsLargerThan3[row][col]) + 500);
-									
-								}
-							}
-							
-						}else if(shotsFiredGrid[row][col+1] == "5"){
-							
-							if(PBShipHitsLeft !=0){
-								
-								if(row<shotsFiredGrid[0].length-2){
-									
-									if(shotsFiredGrid[row][col+2] == "5"){
-										
-										potentialShipsLargerThan3[row][col] = Integer.toString(Integer.parseInt(potentialShipsLargerThan3[row][col]) + 1000);
-										
-									}else{
-										
-										potentialShipsLargerThan3[row][col] = Integer.toString(Integer.parseInt(potentialShipsLargerThan3[row][col]) + 500);
-										
-									}
-									
-								}else if(col>1){
-									
-									if(shotsFiredGrid[row][col-1] == "5"){
-										
-										potentialShipsLargerThan3[row][col] = Integer.toString(Integer.parseInt(potentialShipsLargerThan3[row][col]) + 1000);
-										
-									}else{
-										
-										potentialShipsLargerThan3[row][col] = Integer.toString(Integer.parseInt(potentialShipsLargerThan3[row][col]) + 500);
-										
-									}
-									
-								}else{
-									
-									potentialShipsLargerThan3[row][col] = Integer.toString(Integer.parseInt(potentialShipsLargerThan3[row][col]) + 500);
-									
-								}
-								
-							}
-							
 						}
 						
 					}
@@ -899,7 +515,7 @@ public class ComputerAI {
 				
 				else{
 					
-					potentialShipsLargerThan3[row][col] = "0";
+					potentialShipsLargerThan3[row][col] = 0;
 					
 				}
 				
@@ -910,11 +526,11 @@ public class ComputerAI {
 		double largestPotentialPointpotential = -1.1;
 		
 		//loop through all the potential ship locations and determine which one has the highest number
-		for(int row=0;row<10;row++){
+		for(int row=0;row<shotsFiredGrid.length;row++){
 			
-			for(int col=0;col<10;col++){
+			for(int col=0;col<shotsFiredGrid[0].length;col++){
 				
-				double potential = Double.parseDouble(potentialShipsLargerThan3[row][col]);
+				int potential = potentialShipsLargerThan3[row][col];
 				
 				if(potential > largestPotentialPointpotential){
 					
@@ -924,16 +540,14 @@ public class ComputerAI {
 			}
 			
 		}
-		
 		//redue the potential MA to place an S where the best place to shoot is. 
-		for(int row=0;row<10;row++){
+		for(int row=0;row<shotsFiredGrid.length;row++){
 			
-			for(int col=0;col<10;col++){
+			for(int col=0;col<shotsFiredGrid[0].length;col++){
 				
-				double potential = Double.parseDouble(potentialShipsLargerThan3[row][col]);
+				int potential = potentialShipsLargerThan3[row][col];
 				
 				if(potential == largestPotentialPointpotential){
-					
 					shotsFiredGrid[row][col] = "S";
 					
 				}else{
@@ -950,20 +564,32 @@ public class ComputerAI {
 			
 		}
 		boolean test = true;
-		
+		//int countX = 0;
+		//int countY = 0;
 		while(test){
 			
 			//if there is more than one highest potential ship location randomly pick one.
-			x = (int)Math.floor((Math.random()*10)+ 0);
+			x = (int)Math.floor((Math.random()*shotsFiredGrid[0].length)+ 0);
 			
-			y = (int)Math.floor((Math.random()*10)+ 0);
+			y = (int)Math.floor((Math.random()*shotsFiredGrid.length)+ 0);
 			
 			if(shotsFiredGrid[y][x] == "S"){
 				
 				test = false;
 				
 			}
-			
+			//For taking the randomness out for testing
+			//if(shotsFiredGrid[countY][countX] == "S"){
+			//	x = countX;
+			//	y = countY;
+			//	test = false;	
+			//}
+			//if(countX==9){
+			//	countX = 0;
+			//	countY ++;
+			//}else{
+			//	countX ++;
+			//}
 		}
 		
        setPosition_x(x);
